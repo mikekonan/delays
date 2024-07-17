@@ -63,6 +63,17 @@ The CLI tool can be used to generate delay plans for testing purposes. Here’s 
 delaycli -strategy exponential -totalDuration 20m -numAttempts 5 -exponent 1.5
 ```
 
+#### HTML Output
+
+To generate an HTML file with a chart of delays, use the -htmlOutput flag:
+
+```sh
+delayscli -strategy exponential -totalDuration 20m -numAttempts 5 -exponent 1.5 -htmlOutput delays.html
+```
+
+This will generate an delays.html file in the current directory. Open this file in a web browser to see the
+visualization.
+
 #### Output
 
 ```sh

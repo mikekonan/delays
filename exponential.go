@@ -27,11 +27,8 @@ func Exponential(totalDuration time.Duration, numAttempts int, exponent float64)
 	return expDelay
 }
 
+// generateDelays generates exponential delays based on the configuration.
 func (e *ExponentialStrategy) generateDelays() {
-	if e.exponent < 0 || e.totalDuration <= 0 || e.numAttempts <= 0 {
-		return
-	}
-
 	e.delays = make([]time.Duration, e.numAttempts)
 	if e.numAttempts == 1 {
 		e.delays[0] = e.totalDuration
@@ -49,22 +46,21 @@ func (e *ExponentialStrategy) generateDelays() {
 	for _, val := range expValues {
 		sumExpValues += val
 	}
-
 	normalizedExpValues := make([]float64, e.numAttempts)
 	for i, val := range expValues {
 		normalizedExpValues[i] = val / sumExpValues
 	}
 
 	// Scale the normalized values to fit within the total_duration
-	totalDurationSeconds := e.totalDuration.Seconds()
+	totalDurationMilliseconds := float64(e.totalDuration.Milliseconds())
 	scaledDelays := make([]float64, e.numAttempts)
 	for i, val := range normalizedExpValues {
-		scaledDelays[i] = val * totalDurationSeconds
+		scaledDelays[i] = val * totalDurationMilliseconds
 	}
 
 	// Calculate the individual delays
 	for i, delay := range scaledDelays {
-		e.delays[i] = time.Duration(math.Round(delay)) * time.Second
+		e.delays[i] = time.Duration(delay) * time.Millisecond
 	}
 }
 
